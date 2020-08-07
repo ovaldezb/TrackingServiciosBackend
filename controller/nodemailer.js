@@ -1,94 +1,180 @@
 'use strict'
 
 const nodemailer = require('nodemailer');
-/*let transport = nodemailer.createTransport({
-    host:'mail.nuestrosite.com',
-   port:'465',
-   auth:{
-       user:'reparaciones@tdm.mx',
-       pass:'Marcio123'
-   },
-   tls: {
-    // do not fail on invalid certs
-    rejectUnauthorized: false
-  } 
-});*/
+var Equipo = require('../models/equipo');
 
-//const SMTPConnection = require("nodemailer/lib/smtp-connection");
-/*let options = {
-    port:465,
-    host:'mail.nuestrosite.com',
-    secure: true
-};
-let auth  = {
-    credentials:{
-       user:'reparaciones@tdm.mx',
-       pass:'Marcio123' 
-    }
-}
-let connection = new SMTPConnection(options);*/
+var transporter = nodemailer.createTransport({            
+  host: "smtp.tdm.mx",            
+  port: 587,
+  secure: false ,
+  auth: {
+    type : 'login',
+    user: "reparaciones@tdm.mx",
+    pass: "Marcio123"
+  },
+  ignoreTLS: true,
+  tls: {
+   // do not fail on invalid certs
+   rejectUnauthorized: false
+  },
+  name : 'OmarVB',            
+  debug : true
+});
 
-var controller = {
-    sendEmail: (req,res) =>{
-        /*let transporter = nodemailer.createTransport({
-            host: "smtp.mailtrap.io",
-            port: 587,            
-            auth: {
-              user: "f70bd46706fc42",
-              pass: "8b1d04f3511e83"
-            }            
-          });*/
-          let transporter = nodemailer.createTransport({
-            host: "smtp.mail.yahoo.com",
-            port: 587,
-            //secure: false,
-            auth: {
-              user: "vbomar@yahoo.com.mx",
-              pass: "meaburreHSBC"
-            }/*,
-            tls: {
-             // do not fail on invalid certs
-             rejectUnauthorized: false
-            }*/
-        });
-
-        transporter.verify(function(error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log("Server is ready to take our messages");
-              console.log(success);
-            }
-          });
-
-          const message = {
-            from: 'omar.valdez@protonmail.com',
-            to: 'reparaciones@tdm.mx', // List of recipients
-            subject: 'Design Your Model S | Tesla', // Subject line
-            html: '<h1>Have the most fun you can in a car!</h1><p>Get your <b>Tesla</b> today!</p>'
-        };
+var controller = {    
+    sendEmailInicial: (req,res) =>{
+      var params = req.body;
+      Equipo.find({'id_servicio':params._id}).exec((err,equipoFound)=>{
+        if(err || !equipoFound){
+          console.log(err);
+          return res.status(400).send({
+            status:"error",
+            message:"No es posible encontrar el equipo del servicio "+params.folio
+          }); 
+        }
+        console.log(equipoFound);        
+        const message = {            
+          from: 'reparaciones@tdm.mx', // List of recipients
+          to: params.correo,
+          subject: 'TDM - Folio de reparación '+params.folio, // Subject line
+          html: '<p>Estimado(a): <strong>'+params.cliente+'</strong></p>'+
+              '<p>Gracias por confiar en TDM para la reparaci&oacute;n de su equipo, el equipo ser&aacute; analizado y regresaremos con usted una vez que tengamos el diagnóstico y costo de la reparaci&oacute;n en un lapso de 2 a 3 semanas.</p>'+
+              '<p>El equipo que nos confi&oacute; es el siguiente:</p>'+
+              '<table style="border-collapse: collapse; width: 100%;" border="0">'+
+              ' <tbody>'+
+              '   <tr>'+
+              '     <td colspan="2" align="center">'+
+              '       <table style="border-collapse: collapse; width: 50%;" height="42" border="1">'+
+              '         <tbody>'+
+              '           <tr>'+
+              '             <td style="width: 20%; text-align: right;">Marca:</td>'+
+              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].marca+'</strong></td>'+
+              '           </tr>'+
+              '           <tr>'+
+              '             <td style="width: 20%; text-align: right;">Modelo:</td>'+
+              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].modelo+'</strong></td>'+
+              '           </tr>'+
+              '           <tr>'+
+              '             <td style="width: 20%; text-align: right;">No Serie:</td>'+
+              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].serie+'</strong></td>'+
+              '           </tr>'+
+              '         </tbody>'+
+              '       </table>'+
+              '     </td>'+
+              '   </tr>'+
+              '   <tr><td colspan="2">&nbsp;</td></tr>'+
+              '   <tr>'+
+              '     <td colspan="2">'+
+              '       <h3 style="text-align: center;">El folio de su servicio es:</h3>'+
+              '       </td>'+
+              '   </tr>'+
+              '   <tr>'+
+              '     <td style="width: 50%;" colspan="2">'+
+              '       <h3 style="text-align: center;"><span style="background-color: #ffffff; color: #3366ff;">'+params.folio+'</span><span style="background-color: #ffffff; color: #000000;"></span></h3>'+
+              '     </td>'+
+              '   </tr>'+
+              ' </tbody>'+
+              '</table>'+
+              '<p></p>'+
+              '<p><span style="background-color: #ffffff; color: #000000;">Por favor conserve este n&uacute;mero hasta que reciba su equipo, si tiene cualquier duda o aclaraci&oacute;n use dicho n&uacute;mero como referencia.</span></p>'+
+              '<p><span style="background-color: #ffffff; color: #000000;">Gracias por su preferencia.</span></p>'+
+              '<hr/>'+
+              '<p>TDM Premium<br />WTC Piso 18, Oficina 2<br />(800) 161 4656, (55) 8116-0192 y 93 <br /> <a href="mailto:contacto@tdm.mx">contacto@tdm.mx</a></p>'+
+              '<hr/>'
+            };    
           transporter.sendMail(message)
             .then(info=>{
-              console.log(info);
+              return res.status(200).send({
+                status:"success",
+                message:info
+              }); 
             })
             .catch(err=>{
-                console.log(err);
-            });
-
+              return res.status(400).send({
+                status:"error",
+                message:"No fue posible enviar el correo "+err
+              }); 
+            });    
           transporter.close();
-
-        /*
-        transport.sendMail(message,(err,info)=>{
-            if(err){
-                console.log(err);
-                return err;
-            }else{
-                console.log(info);
-                return info;
-            }
-        });
-        transport.close();*/
+      });     
+    },
+    sendEmailFinal:(req,res)=>{
+      var params = req.body;
+      Equipo.find({'id_servicio':params._id}).exec((err,equipoFound)=>{
+        if(err || !equipoFound){
+          console.log(err);
+          return res.status(400).send({
+            status:"error",
+            message:"No es posible encontrar el equipo del servicio "+params.folio
+          }); 
+        }
+        console.log(equipoFound);        
+        const message = {            
+          from: 'reparaciones@tdm.mx', // List of recipients
+          to: params.correo,
+          subject: 'TDM - Equipo listo para entrega - Folio '+params.folio, // Subject line
+          html: '<p>Estimado(a): <strong>'+params.cliente+'</strong></p>'+
+              '<p>Nos complace informarle que TDM tiene listo su equipo para entreg&aacute;rselo</p>'+
+              '<p>El equipo a ser entregado es el siguiente:</p>'+
+              '<table style="border-collapse: collapse; width: 100%;" border="0">'+
+              ' <tbody>'+
+              '   <tr>'+
+              '     <td colspan="2" align="center">'+
+              '       <table style="border-collapse: collapse; width: 50%;" height="42" border="1">'+
+              '         <tbody>'+
+              '           <tr>'+
+              '             <td style="width: 20%; text-align: right;">Marca:</td>'+
+              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].marca+'</strong></td>'+
+              '           </tr>'+
+              '           <tr>'+
+              '             <td style="width: 20%; text-align: right;">Modelo:</td>'+
+              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].modelo+'</strong></td>'+
+              '           </tr>'+
+              '           <tr>'+
+              '             <td style="width: 20%; text-align: right;">No Serie:</td>'+
+              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].serie+'</strong></td>'+
+              '           </tr>'+
+              '         </tbody>'+
+              '       </table>'+
+              '     </td>'+
+              '   </tr>'+
+              '   <tr><td colspan="2">&nbsp;</td></tr>'+
+              '   <tr>'+
+              '     <td colspan="2">'+
+              '       <h3 style="text-align: center;">El folio de su servicio es:</h3>'+
+              '       </td>'+
+              '   </tr>'+
+              '   <tr>'+
+              '     <td style="width: 50%;" colspan="2">'+
+              '       <h3 style="text-align: center;"><span style="background-color: #ffffff; color: #3366ff;">'+params.folio+'</span><span style="background-color: #ffffff; color: #000000;"></span></h3>'+
+              '     </td>'+
+              '   </tr>'+
+              ' </tbody>'+
+              '</table>'+
+              '<p></p>'+
+              '<p><span style="background-color: #ffffff; color: #000000;">Puede pasar a recogerlo a nuestras oficinas a partir de este momento</span></p>'+
+              '<p><span style="background-color: #ffffff; color: #000000;">Gracias por su preferencia.</span></p>'+
+              '<hr/>'+
+              '<p>TDM Premium<br />WTC Piso 18, Oficina 2<br />(800) 161 4656, (55) 8116-0192 y 93 <br /> <a href="mailto:contacto@tdm.mx">contacto@tdm.mx</a></p>'+
+              '<hr/>'
+            };    
+          transporter.sendMail(message)
+            .then(info=>{
+              return res.status(200).send({
+                status:"success",
+                message:info
+              }); 
+            })
+            .catch(err=>{
+              return res.status(400).send({
+                status:"error",
+                message:"No fue posible enviar el correo "+err
+              }); 
+            });    
+          transporter.close();
+      });
     }
+
 }
 
 module.exports = controller;

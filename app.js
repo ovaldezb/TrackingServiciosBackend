@@ -2,6 +2,7 @@
 
 //Cargar Módulos de node para crear el servidor
 var express = require('express');
+//var session = require('express-session');
 var bodyParser = require('body-parser');
 
 //Ejecutar express (http)
@@ -20,7 +21,21 @@ app.use((req, res, next) => {
 	res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
 	next();
 });
+//app.use(express.static(__dirname + '/views'));
 //Añadir prefijo a la ruta / cargar rutas
 app.use('/api',service_routes);
-
+//Manejo de sesion
+/*app.use(session({
+    secret: "cookie_secret",
+    name: "cookie_name",
+    //store: "sessionStore", // connect-mongo session store
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
+}));
+app.get('/',function(req,res){
+	console.log('Session');
+	sess=req.session;
+	console.log(sess);
+});*/
 module.exports = app;

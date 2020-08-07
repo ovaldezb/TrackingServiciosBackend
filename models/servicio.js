@@ -3,14 +3,13 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var ServicioSchema = Schema({
+var ServicioSchema = Schema({    
     folio: String,
     fechaIngreso:{type: Date, default: Date.now},
     receptor:String,
     cliente:String,
     telefono:String,
-    correo:String,    
-    tecnico:String,
+    correo:String,        
     esgarantia:Boolean,
     numeroguia:Number,
     cliautoriza:Boolean,
@@ -31,7 +30,9 @@ var ServicioSchema = Schema({
     condregreso:String,
     etapa:Number,
     puedereparar:Boolean,
-    tecrecequ: Boolean
+    tecrecequ: Boolean,
+    mensajeria: String,
+    fechaactualizacion: Date
 });
 
 module.exports = mongoose.model('Servicio',ServicioSchema);

@@ -1,13 +1,9 @@
 'use strict'
 
 var validator = require('validator');
-var fs = require('fs');
-var path = require('path');
-
 var Servicio = require('../models/servicio');
 
 var controller = {
-    
 
     open: (req,res) =>{
         //Recoger los parametros por post
@@ -22,7 +18,21 @@ var controller = {
             });
         }
 
-        if(valida_nombre){
+        if(valida_nombre){            
+            /*Servicio.create(params)
+                    .then(serviceStored=>{
+                        return res.status(201).send({
+                            status:"success",
+                            servicio:serviceStored
+                        });
+                    })
+                    .catch(err=>{
+                        return res.status(404).send({
+                            status:"error",
+                            message:"No se pudo guardar el servicio "+err
+                        });
+                    });*/
+            
             var servicio = new Servicio();
             servicio.cliente = params.cliente;
             servicio.receptor = params.receptor;
@@ -44,6 +54,8 @@ var controller = {
             servicio.puedereparar = params.puedereparar;
             servicio.tecrecequ = params.tecrecequ;
             servicio.equipoprobado = params.equipoprobado;
+            servicio.mensajeria = params.mensajeria;
+            servicio.fechaactualizacion = params.fechaactualizacion;
 
             servicio.save((err,serviceStored)=>{
                 if(err || !serviceStored){
@@ -83,13 +95,13 @@ var controller = {
     },
 
     getServicios:(req,res)=>{
-        var query = Servicio.find({});
+        var query = Servicio.find({ etapa: { $lt: 8 } });
         var last = req.params.last;
         if(last || last!=undefined){
             query.limit(5);
         }
 
-        query.sort('_id').exec((err,servicios)=>{
+        query.sort({fechaIngreso:-1}).exec((err,servicios)=>{
             if(err){
                 return res.status(500).send({
                     status:"Error",

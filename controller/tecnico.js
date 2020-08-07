@@ -29,6 +29,7 @@ var controller = {
             tecnico.correo = params.correo;
             tecnico.activo = params.activo;
             tecnico.marca = params.marca;
+            tecnico.clave = params.clave;
             tecnico.save((err,tecnicoStored)=>{
                 if(err || !tecnicoStored){
                     return res.status(404).send({
@@ -86,6 +87,22 @@ var controller = {
             return res.status(200).send({
                 status:"success",
                 tecnico
+            });
+        });
+    },
+    updateTecnico:(req,res)=>{
+        var tecnicoId = req.params.id;
+        var params = req.body;
+        Tecnico.findOneAndUpdate({"_id":tecnicoId},params,{"new":true},(err,tecnicoUpdated)=>{
+            if(err || !tecnicoUpdated ){
+                return res.status(400).send({
+                    status:"error",
+                    message:"No fue posible actualizar"
+                });
+            }
+            return res.status(200).send({
+                status:"success",
+                tecnicoUpdated
             });
         });
     }

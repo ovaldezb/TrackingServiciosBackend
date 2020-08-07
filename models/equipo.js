@@ -8,8 +8,11 @@ var EquipoSchema = Schema({
     marca:String,
     modelo:String,
     serie:String,
-    costo:Number,
-    tecnico:String,
+    costo:Number,        
+    tecnico: {
+        type: Schema.Types.ObjectId,
+        ref: "Tecnico"
+      },
     comentarios:String
 });
 
