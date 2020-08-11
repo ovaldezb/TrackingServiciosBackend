@@ -1,6 +1,7 @@
 'use strict'
-
+const SECRET_KEY = '752146398l@654308#%!|';
 var express = require('express');
+const jwt = require('jsonwebtoken');
 
 var ServicioController = require('../controller/servicio');
 var TecnicoController = require('../controller/tecnico');
@@ -18,13 +19,16 @@ var md_upload = multipart({uploadDir:'./upload/equipos'});
 var sess;
 
 router.post('/servicio',ServicioController.open);
-router.get('/get-servicios',ServicioController.getServicios);
+router.get('/get-servicios',verifyToken,ServicioController.getServicios);
 router.get('/get-servicio/:id',ServicioController.getServicio);
 router.put('/servicio/:id',ServicioController.update);
 
 router.post('/tecnico',TecnicoController.save);
-router.get('/tecnico',TecnicoController.getTecnicos);
+router.get('/tecnico/:filtro',TecnicoController.getTecnicos);
+router.get('/tecnico-by/:usuario',TecnicoController.getTecnico);
 router.put('/tecnico/:id',TecnicoController.updateTecnico);
+
+router.post('/login',TecnicoController.loginUser);
 
 router.post('/equipo',EquipoController.save);
 router.get('/equipos/:id',EquipoController.getEquipos);
@@ -46,7 +50,7 @@ router.put('/marca/:id',MarcaController.updateMarca);
 router.post('/imagen',ImagenController.save);
 router.delete('/imagen/:id',ImagenController.delete);
 router.get('/get-image/:image',ImagenController.getImage);
-router.get('/imagenes/:id',ImagenController.getImagesByEquipoId);
+router.get('/imagenes/:id/:tipo',ImagenController.getImagesByEquipoId);
 
 router.get('/mensajeria',MensajeriaController.getMensajerias);
 
@@ -57,5 +61,27 @@ router.get('/',(req,res)=>{
         return res.redirect('/home');
     }
 });
+
+async function verifyToken(req, res, next) {
+	try {
+		if (!req.headers.authorization) {
+			return res.status(401).send('Unauhtorized Request');
+		}
+		let token = req.headers.authorization.split(' ')[1];
+		if (token === 'null') {
+			return res.status(401).send('Unauhtorized Request');
+		}
+
+		const payload = await jwt.verify(token, SECRET_KEY);
+		if (!payload) {
+			return res.status(401).send('Unauhtorized Request');
+		}
+		req.userId = payload._id;
+		next();
+	} catch(e) {
+		console.log(e)
+		return res.status(401).send('Unauhtorized Request');
+	}
+}
 
 module.exports = router;

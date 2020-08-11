@@ -9,7 +9,9 @@ var TecnicoSchema = Schema({
     telefono:String,
     correo:String,
     activo:Boolean,
-    clave:String
+    clave:String,
+    password:String,
+    rol:String
 });
 
 module.exports = mongoose.model('Tecnico', TecnicoSchema);

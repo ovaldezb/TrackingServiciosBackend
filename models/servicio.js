@@ -32,7 +32,8 @@ var ServicioSchema = Schema({
     puedereparar:Boolean,
     tecrecequ: Boolean,
     mensajeria: String,
-    fechaactualizacion: Date
+    fechaactualizacion: Date,
+    equipo:{marca:String, serie:String}
 });
 
 module.exports = mongoose.model('Servicio',ServicioSchema);

@@ -46,6 +46,7 @@ var controller = {
                     imagen.id_equipo = equipoStored._id;
                     imagen.nombre = imagenes[i].nombre;
                     imagen.nombreoriginal = imagenes[i].nombreoriginal;
+                    imagen.tipo = 0; 
                     imagen.save((err,imagenSaved)=>{                       
                         
                     });
@@ -65,10 +66,12 @@ var controller = {
 
     getEquipos:(req,res)=>{
         var serviceId = req.params.id;
+        
         var query = Equipo.find({'id_servicio':serviceId}).populate("tecnico");        
 
-        query.sort('_id').exec((err,equipos)=>{
+        query.sort('_id').exec((err,equipos)=>{            
             if(err){
+                console.log(err);
                 return res.status(500).send({
                     status:"Error",
                     message: "Error al devolver los equipos "+err

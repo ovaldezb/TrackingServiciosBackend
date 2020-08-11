@@ -11,6 +11,7 @@ var controller = {
         imagen.nombre = params.nombre;
         imagen.nombreoriginal = params.nombreoriginal;
         imagen.id_equipo = params.id_equipo;
+        imagen.tipo = params.tipo;
         imagen.save((err,imagenSaved)=>{
             if(err || !imagenSaved){
                 return res.status(404).send({
@@ -41,7 +42,6 @@ var controller = {
         });
     },
     getImage: (req,res) =>{
-
         var file = req.params.image;
         var path_file = './upload/equipos/'+file;        
         fs.exists(path_file,(exists)=>{            
@@ -57,7 +57,8 @@ var controller = {
     },
     getImagesByEquipoId:(req,res)=>{
         var equipoId = req.params.id;
-        var query = Imagen.find({'id_equipo':equipoId});
+        var tipo = req.params.tipo;
+        var query = Imagen.find({id_equipo:equipoId,tipo:tipo});
         query.sort('_id').exec((err,imagenes)=>{
             if(err || !imagenes){
                 return res.status(404).send({

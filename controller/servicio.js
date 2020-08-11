@@ -84,7 +84,7 @@ var controller = {
             if(err || !serviceUpdate ){
                 return res.status(400).send({
                     status:"error",
-                    message:"No fue posible actualizar"
+                    message:"No fue posible actualizar "+err
                 });
             }
             return res.status(200).send({
