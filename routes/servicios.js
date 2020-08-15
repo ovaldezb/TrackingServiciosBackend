@@ -12,6 +12,7 @@ var EtapasController = require('../controller/etapas');
 var MarcaController = require('../controller/marca');
 var ImagenController = require('../controller/imagen');
 var MensajeriaController = require('../controller/mensajeria');
+var ReporteController = require('../controller/reportes');
 
 var router = express.Router();
 var multipart = require('connect-multiparty');
@@ -30,7 +31,7 @@ router.put('/tecnico/:id',TecnicoController.updateTecnico);
 
 router.post('/login',TecnicoController.loginUser);
 
-router.post('/equipo',EquipoController.save);
+router.post('/equipo/:id',EquipoController.save);
 router.get('/equipos/:id',EquipoController.getEquipos);
 router.get('/equipo/:id',EquipoController.getEquipo);
 router.put('/equipo/:id',EquipoController.updateEquipoByid);
@@ -49,10 +50,15 @@ router.put('/marca/:id',MarcaController.updateMarca);
 
 router.post('/imagen',ImagenController.save);
 router.delete('/imagen/:id',ImagenController.delete);
+router.delete('/imagen-name/:name',ImagenController.deletebyName);
 router.get('/get-image/:image',ImagenController.getImage);
 router.get('/imagenes/:id/:tipo',ImagenController.getImagesByEquipoId);
 
+
 router.get('/mensajeria',MensajeriaController.getMensajerias);
+
+router.get('/reportehtml',ReporteController.reporteHTML);
+router.get('/reportexls',ReporteController.reporteXLS);
 
 router.get('/',(req,res)=>{
     console.log(req);

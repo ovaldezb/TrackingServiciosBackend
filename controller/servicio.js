@@ -1,6 +1,7 @@
 'use strict'
 
 var validator = require('validator');
+
 var Servicio = require('../models/servicio');
 
 var controller = {
@@ -94,8 +95,8 @@ var controller = {
         });
     },
 
-    getServicios:(req,res)=>{
-        var query = Servicio.find({ etapa: { $lt: 8 } });
+    getServicios:(req,res)=>{        
+        var query = Servicio.find({ etapa: { $lt: 9 } }).populate("equipos");
         var last = req.params.last;
         if(last || last!=undefined){
             query.limit(5);
@@ -130,8 +131,9 @@ var controller = {
                 message:"no hay id del servicio"
             });
         }
-
-        Servicio.findById(serviceId,(err,servicio)=>{
+        
+        var query = Servicio.findById(serviceId).populate("equipos");
+        query.exec((err,servicio)=>{
             if(err || !servicio){
                 return res.status(404).send({
                     status:"error",

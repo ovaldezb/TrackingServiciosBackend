@@ -1,6 +1,7 @@
 'use strict'
 
 const nodemailer = require('nodemailer');
+var numeral = require('numeral');
 var Equipo = require('../models/equipo');
 
 var transporter = nodemailer.createTransport({            
@@ -23,7 +24,7 @@ var transporter = nodemailer.createTransport({
 
 var controller = {    
     sendEmailInicial: (req,res) =>{
-      var params = req.body;
+      var params = req.body;      
       Equipo.find({'id_servicio':params._id}).exec((err,equipoFound)=>{
         if(err || !equipoFound){
           console.log(err);
@@ -31,9 +32,8 @@ var controller = {
             status:"error",
             message:"No es posible encontrar el equipo del servicio "+params.folio
           }); 
-        }
-        console.log(equipoFound);        
-        const message = {            
+        }            
+        const message = {             
           from: 'reparaciones@tdm.mx', // List of recipients
           to: params.correo,
           subject: 'TDM - Folio de reparación '+params.folio, // Subject line
@@ -57,6 +57,10 @@ var controller = {
               '           <tr>'+
               '             <td style="width: 20%; text-align: right;">No Serie:</td>'+
               '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].serie+'</strong></td>'+
+              '           </tr>'+
+              '           <tr>'+
+              '             <td style="width: 20%; text-align: right;">Coentarios</td>'+
+              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].comentarios+'</strong></td>'+
               '           </tr>'+
               '         </tbody>'+
               '       </table>'+
@@ -101,14 +105,13 @@ var controller = {
     sendEmailFinal:(req,res)=>{
       var params = req.body;
       Equipo.find({'id_servicio':params._id}).exec((err,equipoFound)=>{
-        if(err || !equipoFound){
-          console.log(err);
+        if(err || !equipoFound){          
           return res.status(400).send({
             status:"error",
             message:"No es posible encontrar el equipo del servicio "+params.folio
           }); 
         }
-        console.log(equipoFound);        
+        
         const message = {            
           from: 'reparaciones@tdm.mx', // List of recipients
           to: params.correo,
@@ -151,6 +154,8 @@ var controller = {
               '   </tr>'+
               ' </tbody>'+
               '</table>'+
+              '<p></p>'+
+              '<p><span style="background-color: #ffffff; color: #000000;">Puede hacer el pago por la cantidad de <a href="'+params.linkpago+'">'+numeral(numeral(params.costocliente).value()).format('$0,0.00')+'</a> a través de Mercado Pago</span></p>'+
               '<p></p>'+
               '<p><span style="background-color: #ffffff; color: #000000;">Puede pasar a recogerlo a nuestras oficinas a partir de este momento</span></p>'+
               '<p><span style="background-color: #ffffff; color: #000000;">Gracias por su preferencia.</span></p>'+

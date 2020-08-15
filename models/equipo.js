@@ -13,7 +13,8 @@ var EquipoSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: "Tecnico"
       },
-    comentarios:String
+    comentarios:String,
+    diagnostico:String
 });
 
 module.exports = mongoose.model('Equipo',EquipoSchema);

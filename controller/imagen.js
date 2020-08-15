@@ -2,6 +2,7 @@
 var fs = require('fs');
 var Imagen = require('../models/imagenes');
 var path = require('path');
+const dir = './upload/equipos/';
 
 var controller = {  
 
@@ -25,7 +26,6 @@ var controller = {
             });
         });
     },
-
     delete:(req,res)=>{
         var idImagen = req.params.id;
         Imagen.findByIdAndDelete({"_id":idImagen}).exec((err,imagenDeleted)=>{
@@ -40,6 +40,30 @@ var controller = {
                 imagenDeleted
             });            
         });
+    },
+    deletebyName:(req,res)=>{
+        var name = req.params.name;
+        fs.stat(dir+name,(err,stats)=>{
+            if(err){
+                return res.status(400).send({
+                    status:"error",
+                    message:"Archivo no encontrado "+err
+                });
+            }
+            fs.unlink(dir+name,err=>{
+                if(err){
+                    return res.status(400).send({
+                        status:"error",
+                        message:"Archivo no eliminado "+err
+                    });
+                }                
+                return res.status(200).send({
+                    status:"success",
+                    message:"Archivo eliminado "
+                });
+                
+            })
+        })
     },
     getImage: (req,res) =>{
         var file = req.params.image;

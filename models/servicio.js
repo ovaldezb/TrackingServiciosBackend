@@ -11,7 +11,7 @@ var ServicioSchema = Schema({
     telefono:String,
     correo:String,        
     esgarantia:Boolean,
-    numeroguia:Number,
+    numeroguia:String,
     cliautoriza:Boolean,
     costorevision:Number,
     costotecnico:Number,
@@ -33,7 +33,13 @@ var ServicioSchema = Schema({
     tecrecequ: Boolean,
     mensajeria: String,
     fechaactualizacion: Date,
-    equipo:{marca:String, serie:String}
+    equipos:[{
+        type:Schema.Types.ObjectId,
+        ref:"Equipo"
+    }],
+    linkpago:String,
+    pagofinal:Number,
+    metodopago:String
 });
 
 module.exports = mongoose.model('Servicio',ServicioSchema);

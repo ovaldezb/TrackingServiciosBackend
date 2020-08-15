@@ -6,15 +6,17 @@ var path = require('path');
 
 var Equipo = require('../models/equipo');
 var Imagen = require('../models/imagenes');
+var Servicio = require('../models/servicio');
 
 var controller = {   
 
     save: (req,res) =>{
         //Recoger los parametros por post        
-        var params = req.body;
+        var params = req.body;        
+        var idServicio = req.params.id;
         // Validar datos
         try{
-            var id_servicio = !validator.isEmpty(params.id_servicio);
+            var idServicioValid = !validator.isEmpty(idServicio);
         }catch(err){
             return res.status(400).send({
                 status:"error",
@@ -22,17 +24,17 @@ var controller = {
             });
         }
 
-        if(id_servicio){
-            var equipo = new Equipo();
-            equipo.id_servicio = params.id_servicio;
+        if(idServicioValid){
+            var equipo = new Equipo();            
             equipo.marca = params.marca;
             equipo.modelo = params.modelo;
             equipo.serie = params.serie;
             equipo.costo = params.costo;
             equipo.tecnico = params.tecnico; 
-            equipo.comentarios = params.comentarios;           
-            var imagenes = params.imagenes;
-            
+            equipo.comentarios = params.comentarios;         
+            equipo.diagnostico = params.diagnostico;  
+            equipo.id_servicio = idServicio;
+            var imagenes = params.imagenes;            
             equipo.save((err,equipoStored)=>{
                 if(err || !equipoStored){
                     return res.status(404).send({
@@ -51,9 +53,19 @@ var controller = {
                         
                     });
                 }
-                return res.status(201).send({
-                    status:"success",
-                    servicio:equipoStored
+
+                Servicio.findOneAndUpdate({"_id":idServicio},{$push:{equipos:equipoStored._id}},{new:true,useFindAndModify:false},(err,serviceUpdate)=>{
+                    if(err || !serviceUpdate){
+                        return res.status(201).send({
+                            status:"error",
+                            message:"No se pudo actualizar el servicio con los equipos"
+                        });
+                    }else{
+                        return res.status(201).send({
+                            status:"success",
+                            serviceUpdate
+                        });
+                    }
                 });
             });
         }else{
@@ -65,27 +77,21 @@ var controller = {
     },
 
     getEquipos:(req,res)=>{
-        var serviceId = req.params.id;
-        
+        var serviceId = req.params.id;        
         var query = Equipo.find({'id_servicio':serviceId}).populate("tecnico");        
-
         query.sort('_id').exec((err,equipos)=>{            
-            if(err){
-                console.log(err);
+            if(err){                
                 return res.status(500).send({
                     status:"Error",
                     message: "Error al devolver los equipos "+err
                 });
-            }
-            
+            }            
             if(equipos.length==0){
                 return res.status(404).send({
                     status:"Error",
                     message: "No Hay equipos"                    
                 });
             }
-
-
             return res.status(200).send({
                 status:"success",
                 equipos
@@ -171,8 +177,6 @@ var controller = {
                 status:"success",
                 imagen
             });
-                       
-        
         }
     }
 };

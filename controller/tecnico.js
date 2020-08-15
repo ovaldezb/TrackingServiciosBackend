@@ -129,7 +129,7 @@ var controller = {
           } else {
             const resultPassword = bcrypt.compareSync(userData.password, user.password);
             if (resultPassword) {
-              const expiresIn = 0.5 * 60 * 60;
+              const expiresIn = 12 * 60 * 60;
               const accessToken = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: expiresIn });      
               const dataUser = {
                 name: user.nombre,
