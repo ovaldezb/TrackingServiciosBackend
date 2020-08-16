@@ -99,8 +99,10 @@ var controller = {
     },
     updateTecnico:(req,res)=>{
         var tecnicoId = req.params.id;
-        var params = req.body;
-        params.password = bcrypt.hashSync(req.body.password);        
+        var params = req.body;        
+        if(params.password != undefined){
+            params.password = bcrypt.hashSync(req.body.password);        
+        }        
         Tecnico.findOneAndUpdate({"_id":tecnicoId},params,{"new":true},(err,tecnicoUpdated)=>{
             if(err || !tecnicoUpdated ){
                 return res.status(400).send({
