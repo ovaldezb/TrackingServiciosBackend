@@ -14,7 +14,8 @@ var EquipoSchema = Schema({
         ref: "Tecnico"
       },
     comentarios:String,
-    diagnostico:String
+    diagnostico:String,
+    folioequipo:String
 });
 
 module.exports = mongoose.model('Equipo',EquipoSchema);

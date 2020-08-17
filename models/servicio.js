@@ -1,6 +1,7 @@
 'use strict'
 
 var mongoose = require('mongoose');
+var Imagen = require('./imagenes');
 var Schema = mongoose.Schema;
 
 var ServicioSchema = Schema({    
@@ -39,7 +40,8 @@ var ServicioSchema = Schema({
     }],
     linkpago:String,
     pagofinal:Number,
-    metodopago:String
+    metodopago:String,
+    imgpagotecnico:[]
 });
 
 module.exports = mongoose.model('Servicio',ServicioSchema);

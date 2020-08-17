@@ -1,6 +1,7 @@
 'use strict'
 var fs = require('fs');
 var Imagen = require('../models/imagenes');
+var Servicio = require('../models/servicio');
 var path = require('path');
 const dir = './upload/equipos/';
 
@@ -93,6 +94,31 @@ var controller = {
             return res.status(200).send({
                 status:"success",
                 imagenes
+            });
+        });
+    },
+    createImagePagoTec:(req,res)=>{        
+        var serviceId = req.params.id;
+        var params = req.body;
+        console.log(params);
+        Servicio.findByIdAndUpdate(serviceId,{
+            $push:{
+                imgpagotecnico:{
+                    nombre:params.nombre,
+                    nombreoriginal:params.nombreoriginal
+                }
+            }
+        },
+        { new: true, useFindAndModify: false },(err,servicio)=>{
+            if(err){
+                return res.status(404).send({
+                    status:"error",
+                    message:'no se pudo insertar imagen'
+                });
+            }
+            return res.status(200).send({
+                status:"success",
+                servicio
             });
         });
     }

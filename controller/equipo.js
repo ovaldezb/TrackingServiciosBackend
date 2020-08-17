@@ -34,6 +34,7 @@ var controller = {
             equipo.comentarios = params.comentarios;         
             equipo.diagnostico = params.diagnostico;  
             equipo.id_servicio = idServicio;
+            equipo.folioequipo = params.folioequipo;
             var imagenes = params.imagenes;            
             equipo.save((err,equipoStored)=>{
                 if(err || !equipoStored){

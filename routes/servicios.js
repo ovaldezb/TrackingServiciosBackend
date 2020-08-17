@@ -21,7 +21,7 @@ var sess;
 
 router.post('/servicio',ServicioController.open);
 router.get('/get-servicios',verifyToken,ServicioController.getServicios);
-router.get('/get-servicio/:id',ServicioController.getServicio);
+router.get('/servicio/:id',ServicioController.getServicio);
 router.put('/servicio/:id',ServicioController.update);
 
 router.post('/tecnico',TecnicoController.save);
@@ -53,12 +53,13 @@ router.delete('/imagen/:id',ImagenController.delete);
 router.delete('/imagen-name/:name',ImagenController.deletebyName);
 router.get('/get-image/:image',ImagenController.getImage);
 router.get('/imagenes/:id/:tipo',ImagenController.getImagesByEquipoId);
+router.post('/img-pagtec/:id',ImagenController.createImagePagoTec);
 
 
 router.get('/mensajeria',MensajeriaController.getMensajerias);
 
-router.get('/reportehtml',ReporteController.reporteHTML);
-router.get('/reportexls',ReporteController.reporteXLS);
+router.get('/reportehtml',verifyToken,ReporteController.reporteHTML);
+router.get('/reportexls',verifyToken,ReporteController.reporteXLS);
 
 router.get('/',(req,res)=>{
     console.log(req);
