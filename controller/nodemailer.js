@@ -36,6 +36,7 @@ var controller = {
         const message = {             
           from: 'reparaciones@tdm.mx', // List of recipients
           to: params.correo,
+          cc:['reparaciones@tdm.mx','manuel.leon@tecno-dinamica.com'],
           subject: 'TDM - Folio de reparación '+params.folio, // Subject line
           html: '<p>Estimado(a): <strong>'+params.cliente+'</strong></p>'+
               '<p>Gracias por confiar en TDM para la reparaci&oacute;n de su equipo, el equipo ser&aacute; analizado y regresaremos con usted una vez que tengamos el diagnóstico y costo de la reparaci&oacute;n en un lapso de 2 a 3 semanas.</p>'+
@@ -115,6 +116,7 @@ var controller = {
         const message = {            
           from: 'reparaciones@tdm.mx', // List of recipients
           to: params.correo,
+          cc:['reparaciones@tdm.mx','manuel.leon@tecno-dinamica.com'],
           subject: 'TDM - Equipo listo para entrega - Folio '+params.folio, // Subject line
           html: '<p>Estimado(a): <strong>'+params.cliente+'</strong></p>'+
               '<p>Nos complace informarle que TDM tiene listo su equipo para entreg&aacute;rselo</p>'+
