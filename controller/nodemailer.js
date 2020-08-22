@@ -18,7 +18,7 @@ var transporter = nodemailer.createTransport({
    // do not fail on invalid certs
    rejectUnauthorized: false
   },
-  name : 'OmarVB',            
+  name : 'XEON',            
   debug : true
 });
 
@@ -45,23 +45,27 @@ var controller = {
               ' <tbody>'+
               '   <tr>'+
               '     <td colspan="2" align="center">'+
-              '       <table style="border-collapse: collapse; width: 50%;" height="42" border="1">'+
+              '       <table style="border-collapse: collapse; width: 55%;" height="42" border="1">'+
               '         <tbody>'+
               '           <tr>'+
-              '             <td style="width: 20%; text-align: right;">Marca:</td>'+
-              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].marca+'</strong></td>'+
+              '             <td style="width: 30%; text-align: right;">Marca:</td>'+
+              '             <td style="width: 70%; text-align: center;"><strong>'+equipoFound[0].marca+'</strong></td>'+
               '           </tr>'+
               '           <tr>'+
-              '             <td style="width: 20%; text-align: right;">Modelo:</td>'+
-              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].modelo+'</strong></td>'+
+              '             <td style="width: 30%; text-align: right;">Modelo:</td>'+
+              '             <td style="width: 70%; text-align: center;"><strong>'+equipoFound[0].modelo+'</strong></td>'+
               '           </tr>'+
               '           <tr>'+
-              '             <td style="width: 20%; text-align: right;">No Serie:</td>'+
-              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].serie+'</strong></td>'+
+              '             <td style="width: 30%; text-align: right;">No Serie:</td>'+
+              '             <td style="width: 70%; text-align: center;"><strong>'+equipoFound[0].serie+'</strong></td>'+
               '           </tr>'+
               '           <tr>'+
-              '             <td style="width: 20%; text-align: right;">Coentarios</td>'+
-              '             <td style="width: 80%; text-align: center;"><strong>'+equipoFound[0].comentarios+'</strong></td>'+
+              '             <td style="width: 30%; text-align: right;">Comentarios</td>'+
+              '             <td style="width: 70%; text-align: center;"><strong>'+equipoFound[0].comentarios+'</strong></td>'+
+              '           </tr>'+
+              '           <tr>'+
+              '             <td style="width: 30%; text-align: right;">Costo de Revisión:</td>'+
+              '             <td style="width: 70%; text-align: center;"><strong>$'+(params.esgarantia ? "0.00" :params.costorevision+".00" )+'</strong></td>'+
               '           </tr>'+
               '         </tbody>'+
               '       </table>'+
