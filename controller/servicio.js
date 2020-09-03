@@ -3,6 +3,7 @@
 var validator = require('validator');
 
 var Servicio = require('../models/servicio');
+const Folio = require('../models/folio');
 
 var controller = {
 
@@ -20,20 +21,6 @@ var controller = {
         }
 
         if(valida_nombre){            
-            /*Servicio.create(params)
-                    .then(serviceStored=>{
-                        return res.status(201).send({
-                            status:"success",
-                            servicio:serviceStored
-                        });
-                    })
-                    .catch(err=>{
-                        return res.status(404).send({
-                            status:"error",
-                            message:"No se pudo guardar el servicio "+err
-                        });
-                    });*/
-            
             var servicio = new Servicio();
             servicio.cliente = params.cliente;
             servicio.receptor = params.receptor;
@@ -57,7 +44,6 @@ var controller = {
             servicio.equipoprobado = params.equipoprobado;
             servicio.mensajeria = params.mensajeria;
             servicio.fechaactualizacion = params.fechaactualizacion;
-
             servicio.save((err,serviceStored)=>{
                 if(err || !serviceStored){
                     return res.status(404).send({
@@ -65,9 +51,14 @@ var controller = {
                         message:"No se pudo guardar el servicio "+err
                     });
                 }
-                return res.status(201).send({
-                    status:"success",
-                    servicio:serviceStored
+                /* Se incrementa en 1 el folio cuando se inserta el servicio */
+                const filter = { _id: 'folio' };
+                const update = {$inc:{sequence_value:1}};
+                Folio.findOneAndUpdate(filter,update,{new:true},(err,folioUpdated)=>{
+                    return res.status(201).send({
+                        status:"success",
+                        servicio:serviceStored
+                    });
                 });
             });
         }else{

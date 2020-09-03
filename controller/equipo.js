@@ -44,7 +44,7 @@ var controller = {
                     });
                 }
                 
-                for(var i=0;i<imagenes.length;i++){
+                /*for(var i=0;i<imagenes.length;i++){
                     var imagen = new Imagen();
                     imagen.id_equipo = equipoStored._id;
                     imagen.nombre = imagenes[i].nombre;
@@ -53,7 +53,7 @@ var controller = {
                     imagen.save((err,imagenSaved)=>{                       
                         
                     });
-                }
+                }*/
 
                 Servicio.findOneAndUpdate({"_id":idServicio},{$push:{equipos:equipoStored._id}},{new:true,useFindAndModify:false},(err,serviceUpdate)=>{
                     if(err || !serviceUpdate){
@@ -127,6 +127,7 @@ var controller = {
     updateEquipoByid:(req,res)=>{
         var equipoId = req.params.id;
         var params = req.body;        
+        var imagenes = params.imagenes;
         Equipo.findOneAndUpdate({"_id":equipoId},params,{"new":true},(err,equipoUpdate)=>{
             if(err || !equipoUpdate ){
                 return res.status(400).send({
@@ -140,9 +141,23 @@ var controller = {
             });
         });
     },
+    createImagenbyEquipoId:(req,res)=>{
+        var equipoId = req.params.id;
+        var params = req.body;
+        
+        var imagen = new Imagen();
+        imagen.id_equipo = equipoId;
+        imagen.nombre = params.nombre;
+        imagen.nombreoriginal = params.nombreoriginal;
+        imagen.tipo = 0; 
+        imagen.save((err,imagenSaved)=>{                       
+            return res.status(200).send({
+                status:"success",
+                imagenSaved
+            });
+        });
+    },
     upload:(req,res)=>{
-        // configurar el modulo del connect multiparty router/article.js        
-        //recoger el archivo de la petición
         var file_name='Imagen no subida...';
         var originaFilename = req.files.file0.originalFilename;
         if(!req.files){
@@ -151,12 +166,11 @@ var controller = {
                 message: file_name
             });
         }
-
         //Conseguir el nombre y la extensión
-        var file_path = req.files.file0.path;        
+        var file_path = req.files.file0.path;      
         var file_split = file_path.split('\\');
         //nombre del archivo
-        file_name = file_split[2];        
+        file_name = file_split[2];       
         //extension
         var extension = file_name.split('\.')[1];
         //comprobar la extension, sino es valida borar el archivo
@@ -172,7 +186,7 @@ var controller = {
             var imagen = new Imagen();
             imagen.nombre = file_name;
             imagen.nombreoriginal = originaFilename;
-            imagen._id = "";
+            //imagen._id = "";
             imagen.id_equipo = "";
             return res.status(200).send({
                 status:"success",

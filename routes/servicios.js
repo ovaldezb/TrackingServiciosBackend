@@ -36,6 +36,7 @@ router.get('/equipos/:id',EquipoController.getEquipos);
 router.get('/equipo/:id',EquipoController.getEquipo);
 router.put('/equipo/:id',EquipoController.updateEquipoByid);
 router.post('/upload-img/',md_upload,EquipoController.upload);
+router.post('/equipo-imagen/:id',EquipoController.createImagenbyEquipoId);
 
 router.get('/get-folio/:name',FolioControler.getNextValue);
 

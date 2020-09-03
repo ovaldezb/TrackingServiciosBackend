@@ -10,20 +10,15 @@ var controller = {
 
     getNextValue:(req,res)=>{
         var id = req.params.name;
-        const filter = { _id: id };
-        const update = {$inc:{sequence_value:1}};
         try{
             var query = Folio.find({"_id":id});
             var valueExist = '';
             query.exec((err,idExiste)=>{
                 valueExist = idExiste;
                 if(valueExist != ''){
-                    Folio.findOneAndUpdate(filter,update,{new:true},(err,folioUpdated)=>{                    
-                        return res.status(201).send({
-                            status:"success",
-                            folio: pad(folioUpdated.sequence_value,10)
-                        });
-        
+                    return res.status(201).send({
+                        status:"success",
+                        folio: pad(idExiste[0].sequence_value,10)
                     });
                 }else{                
                     var folio1 = new Folio();
