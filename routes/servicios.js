@@ -23,6 +23,8 @@ router.post('/servicio',ServicioController.open);
 router.get('/get-servicios',verifyToken,ServicioController.getServicios);
 router.get('/servicio/:id',ServicioController.getServicio);
 router.put('/servicio/:id',ServicioController.update);
+router.put('/servudptng/:id',ServicioController.updateGuia);
+router.get('/servabierto',ServicioController.getServNoEnv);
 
 router.post('/tecnico',TecnicoController.save);
 router.get('/tecnico/:filtro',TecnicoController.getTecnicos);

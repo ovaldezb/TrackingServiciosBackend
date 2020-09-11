@@ -85,7 +85,6 @@ var controller = {
             });
         });
     },
-
     getServicios:(req,res)=>{        
         var query = Servicio.find({ etapa: { $lt: 9 } }).populate("equipos");
         var last = req.params.last;
@@ -136,7 +135,44 @@ var controller = {
                 servicio
             });
         });
+    },
+    updateGuia:(req,res)=>{
+        var servicioId = req.params.id;
+        var params = req.body;
+        Servicio.findByIdAndUpdate({_id:servicioId},params,(err,servUpdt)=>{
+            if(err || !servUpdt){
+                return res.status(404).send({
+                    status:"error",
+                    message:"No Existe el servicio"
+                });
+            }
+            return res.status(200).send({
+                status:"success",
+                servUpdt
+            });
+        });
+    },
 
+    getServNoEnv:(req,res)=>{        
+        var query = Servicio.find({ etapa: { $eq: 0 } });
+        query.sort({fechaIngreso:-1}).exec((err,servicios)=>{
+            if(err){
+                return res.status(500).send({
+                    status:"Error",
+                    message: "Error al devolver los servicios "+err
+                });
+            }
+            if(servicios.length==0){
+                return res.status(404).send({
+                    status:"Error",
+                    message: "No Hay servicios"                    
+                });
+            }
+            return res.status(200).send({
+                status:"success",
+                servicios
+            });
+        });
     }
 };
 
