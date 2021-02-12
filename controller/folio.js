@@ -18,7 +18,7 @@ var controller = {
                 if(valueExist != ''){
                     return res.status(201).send({
                         status:"success",
-                        folio: pad(idExiste[0].sequence_value,10)
+                        folio: pad(idExiste[0].sequence_value,7)
                     });
                 }else{                
                     var folio1 = new Folio();
