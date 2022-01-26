@@ -13,6 +13,7 @@ var MarcaController = require('../controller/marca');
 var ImagenController = require('../controller/imagen');
 var MensajeriaController = require('../controller/mensajeria');
 var ReporteController = require('../controller/reportes');
+var InventarioController = require('../controller/inventario');
 
 var router = express.Router();
 var multipart = require('connect-multiparty');
@@ -58,11 +59,15 @@ router.get('/get-image/:image',ImagenController.getImage);
 router.get('/imagenes/:id/:tipo',ImagenController.getImagesByEquipoId);
 router.post('/img-pagtec/:id',ImagenController.createImagePagoTec);
 
-
 router.get('/mensajeria',MensajeriaController.getMensajerias);
 
 router.get('/reportehtml',verifyToken,ReporteController.reporteHTML);
 router.get('/reportexls',verifyToken,ReporteController.reporteXLS);
+
+router.post('/producto',InventarioController.save);
+router.get('/producto',InventarioController.getProductos);
+router.get('/producto/:noParte',InventarioController.findNoParte);
+router.post('/mercancia',InventarioController.saveMerca);
 
 router.get('/',(req,res)=>{
     console.log(req);
