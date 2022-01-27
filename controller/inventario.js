@@ -1,11 +1,10 @@
 'use strict'
 
 var validator = require('validator');
-var fs = require('fs');
-var path = require('path');
 
 var Producto = require('../models/producto');
 const Mercancia = require('../models/mercancia');
+const Vendido = require('../models/vendido');
 
 var controller = {
   save: (req,res) =>{
@@ -45,6 +44,7 @@ var controller = {
     var mercancia = new Mercancia();
     mercancia.producto = params.producto;
     mercancia.estado = params.estado;
+    mercancia.bodega = params.bodega;
     mercancia.serie = params.serie;
     mercancia.proveedor = params.proveedor;
     mercancia.proveedor = params.proveedor;
@@ -91,8 +91,94 @@ var controller = {
         productos
       });
     });
-
-
+  },
+  getByProductoFeatures:(req,res)=>{
+    var descripcion = req.params.descripcion;
+    var queryProducto = Producto.find({'modelo':{$regex:descripcion}},(err,productos)=>{
+      if(err!==null){
+        return res.status(404).send({
+          status:"error",
+          message:"error al buscar mercancias por serie"
+        });
+      }
+      return res.status(200).send({
+        status:"success",
+        productos
+      });
+    });
+  },
+  getByNoSerie:(req,res)=>{
+    var noSerie = req.params.noSerie;
+    console.log(noSerie);
+    var queryMercancia = Mercancia.find({'serie':{'$regex':noSerie}}).populate("producto");
+    queryMercancia.exec((err,founds)=>{
+      if(err!==null){
+        return res.status(404).send({
+          status:"error",
+          message:"error al buscar mercancias por serie"
+        });
+      }
+      return res.status(200).send({
+        status:"success",
+        founds
+      });
+    });
+  },
+  getByProductId:(req,res)=>{
+    var productoId = req.params.id;
+    Mercancia.find({'producto':productoId},(err,mercancias)=>{
+      if(err!==null){
+        return res.status(404).send({
+          status:"error",
+          message:"error al buscar mercancias por product id "+err
+        });
+      }
+      return res.status(200).send({
+        status:"success",
+        mercancias
+      });
+    }).populate("producto");
+  },
+  saveVendido:(req,res)=>{
+    var params = req.body;
+    var vendido = new Vendido();
+    vendido.producto = params.producto;
+    vendido.estado = params.estado;
+    vendido.bodega= params.bodega;
+    vendido.serie= params.serie;
+    vendido.precioCompra= params.precioCompra
+    vendido.fechaCompra= params.fechaCompra;
+    vendido.capturoEntrada= params.capturoEntrada;
+    vendido.capturoSalida= params.capturoSalida;
+    vendido.precioVenta= params.precioVenta;
+    //vendido.idEquipoVenta= params. 
+    vendido.noFacturaCompra= params.noFacturaCompra;
+    vendido.noFacturaVenta= params.noFacturaVenta;
+    vendido.fechaVenta= params.fechaVenta;
+    vendido.cliente= params.cliente;
+    vendido.tiempoGarantia= params.tiempoGarantia;
+    vendido.fechaVencimientoGarantia= params.fechaVencimientoGarantia;
+    vendido.motivo= params.motivo;
+    vendido.observaciones= params.observaciones;
+    vendido.save((err,vendido)=>{
+      if(err || !vendido){
+        return res.status(400).send({
+          status:"error",
+          message:"Error al Guardar el vendido "+err
+        });
+      }
+      Producto.findOneAndUpdate({'_id':params.producto._id},{'$inc':{'stock':-1}},{"new":true},(err,prodUpdated)=>{
+        if(!err){
+          Mercancia.findOneAndDelete({'_id':params._id},(err,mercanciaDeleted)=>{
+            console.log(mercanciaDeleted);
+          });
+        }
+      });
+      return res.status(201).send({
+        status:"success",
+        vendido
+      });
+    });
   }
 };
 

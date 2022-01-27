@@ -66,16 +66,20 @@ router.get('/reportexls',verifyToken,ReporteController.reporteXLS);
 
 router.post('/producto',InventarioController.save);
 router.get('/producto',InventarioController.getProductos);
+
 router.get('/producto/:noParte',InventarioController.findNoParte);
 router.post('/mercancia',InventarioController.saveMerca);
+router.get('/mercancia/:descripcion',InventarioController.getByProductoFeatures);
+router.get('/mercancia/producto/:id',InventarioController.getByProductId);
+router.post('/mercancia/vendido',InventarioController.saveVendido);
 
-router.get('/',(req,res)=>{
+/*router.get('/',(req,res)=>{
     console.log(req);
     sess = req.session;
     if(sess.user) {
         return res.redirect('/home');
     }
-});
+});*/
 
 async function verifyToken(req, res, next) {
 	try {

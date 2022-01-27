@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var MercanciaSchema = Schema({
+var VendidoSchema = Schema({
     producto:{
         type: Schema.Types.ObjectId,
         ref: "Producto"
@@ -27,4 +27,4 @@ var MercanciaSchema = Schema({
     observaciones:String
 });
 
-module.exports = mongoose.model('Mercancia', MercanciaSchema);
+module.exports = mongoose.model('Vendido', VendidoSchema);

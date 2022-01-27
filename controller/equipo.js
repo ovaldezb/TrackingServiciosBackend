@@ -43,21 +43,10 @@ var controller = {
                         message:"No se pudo guardar el equipo "+err
                     });
                 }
-                
-                /*for(var i=0;i<imagenes.length;i++){
-                    var imagen = new Imagen();
-                    imagen.id_equipo = equipoStored._id;
-                    imagen.nombre = imagenes[i].nombre;
-                    imagen.nombreoriginal = imagenes[i].nombreoriginal;
-                    imagen.tipo = 0; 
-                    imagen.save((err,imagenSaved)=>{                       
-                        
-                    });
-                }*/
 
                 Servicio.findOneAndUpdate({"_id":idServicio},{$push:{equipos:equipoStored._id}},{new:true,useFindAndModify:false},(err,serviceUpdate)=>{
                     if(err || !serviceUpdate){
-                        return res.status(201).send({
+                        return res.status(400).send({
                             status:"error",
                             message:"No se pudo actualizar el servicio con los equipos"
                         });

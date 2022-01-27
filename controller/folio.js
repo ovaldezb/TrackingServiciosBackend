@@ -29,7 +29,6 @@ var controller = {
                             return res.status(400).send({
                                 status:"error",
                                 message:"No se pudo guardar el folio "+id
-                                
                             });
                         }
                         return res.status(201).send({
@@ -37,7 +36,6 @@ var controller = {
                             folio: pad(folioStored.sequence_value,10)
                         });                      
                     });
-                    
                 }
             });
         }catch(error){
