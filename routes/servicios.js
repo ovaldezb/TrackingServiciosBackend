@@ -68,18 +68,15 @@ router.post('/producto',InventarioController.save);
 router.get('/producto',InventarioController.getProductos);
 
 router.get('/producto/:noParte',InventarioController.findNoParte);
+router.get('/mercancia',InventarioController.getVendido);
+router.get('/mercancia/rango',InventarioController.getVendidoByRangoFechas);
 router.post('/mercancia',InventarioController.saveMerca);
-router.get('/mercancia/:descripcion',InventarioController.getByProductoFeatures);
+router.get('/mercancia/:filtro',InventarioController.getByProductoFeatures);
 router.get('/mercancia/producto/:id',InventarioController.getByProductId);
 router.post('/mercancia/vendido',InventarioController.saveVendido);
 
-/*router.get('/',(req,res)=>{
-    console.log(req);
-    sess = req.session;
-    if(sess.user) {
-        return res.redirect('/home');
-    }
-});*/
+router.post('/pendiente',InventarioController.savePendiente);
+router.post('/pendiente/increase',InventarioController.increasePendientes);
 
 async function verifyToken(req, res, next) {
 	try {
