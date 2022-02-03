@@ -73,10 +73,13 @@ router.get('/mercancia/rango',InventarioController.getVendidoByRangoFechas);
 router.post('/mercancia',InventarioController.saveMerca);
 router.get('/mercancia/:filtro',InventarioController.getByProductoFeatures);
 router.get('/mercancia/producto/:id',InventarioController.getByProductId);
+router.get('/disponible',InventarioController.getMercanciaDisponible);
 router.post('/mercancia/vendido',InventarioController.saveVendido);
 
 router.post('/pendiente',InventarioController.savePendiente);
 router.post('/pendiente/increase',InventarioController.increasePendientes);
+
+router.get('/bodegas',InventarioController.getBodegas);
 
 async function verifyToken(req, res, next) {
 	try {

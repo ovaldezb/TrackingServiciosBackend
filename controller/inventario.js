@@ -5,6 +5,7 @@ var Producto = require('../models/producto');
 const Mercancia = require('../models/mercancia');
 const Vendido = require('../models/vendido');
 const Pendiente = require('../models/pendiente');
+const Bodega = require('../models/bodega');
 
 var controller = {
   save: (req,res) =>{
@@ -53,6 +54,7 @@ var controller = {
     mercancia.proveedor = params.proveedor;
     mercancia.proveedor = params.proveedor;
     mercancia.precioCompra = params.precioCompra;
+    mercancia.precioDolares = params.precioDolares;
     mercancia.noFacturaCompra = params.noFacturaCompra;
     mercancia.fechaCompra = params.fechaCompra;
     mercancia.capturoEntrada = params.capturoEntrada;
@@ -160,7 +162,8 @@ var controller = {
     vendido.estado = params.estado;
     vendido.bodega= params.bodega;
     vendido.serie= params.serie;
-    vendido.precioCompra= params.precioCompra
+    vendido.precioCompra= params.precioCompra;
+    vendido.precioDolares = params.precioDolares;
     vendido.fechaCompra= params.fechaCompra;
     vendido.capturoEntrada= params.capturoEntrada;
     vendido.capturoSalida= params.capturoSalida;
@@ -201,7 +204,8 @@ var controller = {
     vendido.estado = params.estado;
     vendido.bodega= params.bodega;
     vendido.serie= params.serie;
-    vendido.precioCompra= params.precioCompra
+    vendido.precioCompra= params.precioCompra;
+    vendido.precioDolares = params.precioDolares;
     vendido.fechaCompra= params.fechaCompra;
     vendido.capturoEntrada= params.capturoEntrada;
     vendido.capturoSalida= params.capturoSalida;
@@ -243,7 +247,8 @@ var controller = {
     pendiente.estado = params.estado;
     pendiente.bodega = params.bodega;
     pendiente.serie = params.serie;
-    pendiente.precioCompra = params.precioCompra
+    pendiente.precioCompra = params.precioCompra;
+    pendiente.precioDolares = params.precioDolares;
     pendiente.fechaCompra = params.fechaCompra;
     pendiente.capturoEntrada = params.capturoEntrada;
     pendiente.capturoSalida = params.capturoSalida;
@@ -285,6 +290,7 @@ var controller = {
         vendido.bodega = params.bodega;
         vendido.serie = params.serie;
         vendido.precioCompra = params.precioCompra;
+        vendido.precioDolares = params.precioDolares;
         vendido.fechaCompra = params.fechaCompra;
         vendido.capturoEntrada = params.capturoEntrada;
         vendido.capturoSalida = pendiente.capturoSalida;
@@ -366,6 +372,34 @@ var controller = {
         mercancias
       });
     });
+  },
+  getBodegas:(req,res)=>{
+    Bodega.find({},(err,bodegas)=>{
+      if(err || !bodegas){
+        return res.status(400).send({
+          status:"error",
+          message:"Error al buscar bodegas"
+        });
+      }
+      return res.status(200).send({
+        status:"success",
+        bodegas
+      });
+    });
+  },
+  getMercanciaDisponible:(req,res)=>{
+    Mercancia.find({},(err,mercancias)=>{
+      if(err || !mercancias){
+        return res.status(400).send({
+          status:"error",
+          message:"Error al buscar mercancias disponibles"
+        });
+      }
+      return res.status(200).send({
+        status:"success",
+        mercancias
+      });
+    }).populate("producto");
   }
 };
 

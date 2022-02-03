@@ -12,6 +12,7 @@ var VendidoSchema = Schema({
     bodega:String,
     serie:String,
     precioCompra:Number,
+    precioDolares:Number,
     fechaCompra:Date,
     capturoEntrada:String,
     capturoSalida:String,
