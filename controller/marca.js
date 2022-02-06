@@ -3,7 +3,7 @@
 var Marca = require('../models/marca');
 
 var controller = {
-    save:(req,res)=>{
+    /*save:(req,res)=>{
         var params = req.body;
         var marca = new Marca();
         marca.nombre = params.nombre;
@@ -20,11 +20,11 @@ var controller = {
                 marcaSaved
             });
         });
-    },
+    },*/
 
     getMarcas:(req,res)=>{
         var query = Marca.find();
-        query.sort('_id').exec((err,marcas)=>{
+        query.exec((err,marcas)=>{
             if(err){
                 return res.status(500).send({
                     status:"Error",
