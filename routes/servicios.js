@@ -66,11 +66,13 @@ router.get('/reportexls',verifyToken,ReporteController.reporteXLS);
 
 router.post('/producto',InventarioController.save);
 router.get('/producto',InventarioController.getProductos);
-
 router.get('/producto/:noParte',InventarioController.findNoParte);
+router.put('/producto',InventarioController.updateProducto);
+
 router.get('/mercancia',InventarioController.getVendido);
 router.get('/mercancia/rango',InventarioController.getVendidoByRangoFechas);
 router.post('/mercancia',InventarioController.saveMerca);
+router.put('/mercancia/:id',InventarioController.updateMerca);
 router.get('/mercancia/:filtro',InventarioController.getByProductoFeatures);
 router.get('/mercancia/producto/:id',InventarioController.getByProductId);
 router.get('/disponible',InventarioController.getMercanciaDisponible);

@@ -6,6 +6,7 @@ const Mercancia = require('../models/mercancia');
 const Vendido = require('../models/vendido');
 const Pendiente = require('../models/pendiente');
 const Bodega = require('../models/bodega');
+const { param } = require('../routes/servicios');
 
 var controller = {
   save: (req,res) =>{
@@ -44,6 +45,21 @@ var controller = {
       }
     });
   },
+  updateProducto:(req,res)=>{
+    var params = req.body;
+    Producto.findOneAndUpdate({'_id':params._id},params,(err,productSaved)=>{
+      if(err || !productSaved){
+        return res.status(400).send({
+          status:"error",
+          message:"No se pudo actualizar el producto"
+        });
+      }
+      return res.status(200).send({
+        status:"success",
+        productSaved
+      });
+    });
+  },
   saveMerca:(req,res)=>{
     var params = req.body;
     var mercancia = new Mercancia();
@@ -70,6 +86,23 @@ var controller = {
           mercanciaSaved
         });
       
+    });
+  },
+  updateMerca:(req,res)=>{
+    var id = req.params.id;
+    var params = req.body;
+    Mercancia.findOneAndUpdate({'_id':id},params,(err,mercaSaved)=>{
+      if(err || !mercaSaved){
+        return res.status(400).send({
+          status:"error",
+          message:"No se pudo actualizar la merca"
+        });
+      }
+
+      return res.status(200).send({
+        status:"success",
+        mercaSaved
+      });
     });
   },
   findNoParte:(req,res)=>{
