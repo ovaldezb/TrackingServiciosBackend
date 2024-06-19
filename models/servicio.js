@@ -8,6 +8,10 @@ var ServicioSchema = Schema({
     folio: String,
     fechaIngreso:{type: Date, default: Date.now},
     receptor:String,
+    clienteId:{
+        type: Schema.Types.ObjectId,
+        ref: "Cliente"
+      },
     cliente:String,
     telefono:String,
     correo:String,        

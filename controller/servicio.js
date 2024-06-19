@@ -4,6 +4,7 @@ var validator = require('validator');
 
 var Servicio = require('../models/servicio');
 const Folio = require('../models/folio');
+//const Cliente = require('../models/cliente');
 
 var controller = {
 
@@ -20,11 +21,12 @@ var controller = {
             });
         }
 
-        if(valida_nombre){            
+        if(valida_nombre){   
             var servicio = new Servicio();
-            servicio.cliente = params.cliente;
+            servicio.clienteId = params.clienteId;
             servicio.receptor = params.receptor;
             servicio.folio = params.folio;
+            servicio.cliente = params.cliente;
             servicio.telefono = params.telefono;
             servicio.correo = params.correo;
             servicio.costorevision = params.costorevision;
@@ -86,7 +88,7 @@ var controller = {
         });
     },
     getServicios:(req,res)=>{        
-        var query = Servicio.find({ etapa: { $lt: 9 } }).populate("equipos");
+        var query = Servicio.find({ etapa: { $lt: 9 } }).populate("equipos").populate('clienteId');
         var last = req.params.last;
         if(last || last!=undefined){
             query.limit(5);
@@ -122,7 +124,7 @@ var controller = {
             });
         }
         
-        var query = Servicio.findById(serviceId).populate("equipos");
+        var query = Servicio.findById(serviceId).populate("equipos").populate("clienteId");
         query.exec((err,servicio)=>{
             if(err || !servicio){
                 return res.status(404).send({
